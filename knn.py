@@ -23,6 +23,7 @@ k = 5
 
 y_pred = np.zeros(len(X_test))
 for i, test_sample in enumerate(X_test):
+    # euclidean distance
     k_sim = np.argsort(np.sqrt(np.sum((test_sample - X_train)**2, axis=1)))[:k]
     y_pred[i] = int(np.argmax(np.bincount([y_train[j] for j in k_sim])))
 
