@@ -28,4 +28,4 @@ for i, test_sample in enumerate(X_test):
 
 acc = (len(y_test)-np.count_nonzero(y_pred-y_test))/len(y_test)
 
-print((acc))
+print(acc)
