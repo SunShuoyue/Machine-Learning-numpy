@@ -1,7 +1,7 @@
 import numpy as np
 
 # prepare data
-rows = 100
+rows = 1000
 test_ratio = 0.2
 variables = 3
 x1 = np.random.randint(100, 1000, [int(rows / 2), variables]) * 0.01
@@ -58,16 +58,53 @@ def add_layer(Xy):
                     largest_impurity = info_gain
                     result = {'feature': i, 'threshold': value, 'left': Xy1, 'right': Xy2}
     if largest_impurity == 0:
+        print(0)
         values, counts = np.unique(Xy[:, -1], return_counts=True)
-        return np.argmax(counts)
+        return values[np.argmax(counts)]
     elif largest_impurity < min_info_gain:
+        print(1)
         values, counts = np.unique(result['left'][:, -1], return_counts=True)
-        result['left'] = np.argmax(counts)
+        result['left'] = values[np.argmax(counts)]
         values, counts = np.unique(result['right'][:, -1], return_counts=True)
-        result['right'] = np.argmax(counts)
+        result['right'] = values[np.argmax(counts)]
+        return result
     result['left'] = add_layer(result['left'])
     result['right'] = add_layer(result['right'])
     return result
 
 
-res = add_layer(Xy)
+tree = add_layer(Xy)
+
+
+# test
+def next_layer(tree, sample):
+    if isinstance(sample[tree['feature']], int) or isinstance(sample[tree['feature']], float):
+        if sample[tree['feature']] >= tree['threshold']:
+            if isinstance(tree['left'], dict):
+                return next_layer(tree['left'], sample)
+            else:
+                return tree['left']
+        else:
+            if isinstance(tree['right'], dict):
+                return next_layer(tree['right'], sample)
+            else:
+                return tree['right']
+    else:
+        if sample[tree['feature']] == tree['threshold']:
+            if isinstance(tree['left'], dict):
+                return next_layer(tree['left'], sample)
+            else:
+                return tree['left']
+        else:
+            if isinstance(tree['right'], dict):
+                return next_layer(tree['right'], sample)
+            else:
+                return tree['right']
+
+
+y_pred = []
+for sample in X_test:
+    y_pred.append(next_layer(tree, sample))
+
+acc = np.sum(y_test == y_pred) / len(y_test)
+print(acc)
