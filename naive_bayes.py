@@ -8,7 +8,7 @@ data = np.array(df)
 np.random.shuffle(data)
 
 test_ratio = 0.2
-rows, variables = data[:,:-1].shape
+rows, variables = data[:, :-1].shape
 X_train = data[:int(rows * (1 - test_ratio)), :variables]
 y_train = data[:int(rows * (1 - test_ratio)), variables]
 X_test = data[int(rows * (1 - test_ratio)):, :variables]
@@ -17,7 +17,7 @@ y_test = data[int(rows * (1 - test_ratio)):, variables]
 # train
 data = []
 words = []
-for sen in X_train[:,0]:
+for sen in X_train[:, 0]:
     word = jieba.lcut(sen)
     data.append(word)
     words += word
@@ -35,9 +35,9 @@ bayes = bayes * (np.bincount(np.array(y_train, dtype=int)) / len(y_train)).resha
 
 # test
 y_pred = []
-for sen in X_test[:,0]:
+for sen in X_test[:, 0]:
     words = jieba.lcut(sen)
-    pred = [np.nan]*len(classes)
+    pred = [np.nan] * len(classes)
     for i in classes:
         lik = 0
         for word in words:
