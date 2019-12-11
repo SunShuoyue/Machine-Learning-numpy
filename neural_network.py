@@ -119,6 +119,7 @@ for i in range(len(X_test)):
 
 acc = np.sum(y_test == y_pred) / len(y_test)
 print('test:'+str(acc))
+print(y_pred)
 
 y_pred = []
 for i in range(len(X_train)):
@@ -135,3 +136,4 @@ for i in range(len(X_train)):
 
 acc = np.sum(y_train == y_pred) / len(y_train)
 print('train:'+str(acc))
+print(y_pred)
